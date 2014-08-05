@@ -1,0 +1,116 @@
+Triple Booting OSX Mavericks, Windows 8.1, Ubuntu 14.04
+Author : David Fletcher
+
+Tested Hardware: Macbook Pro 11,1 (Late 2013, 13-inch Retina display)
+
+Required Software:
+
+Refind binary zip file
+http://www.rodsbooks.com/refind/getting.html
+
+(optional)
+gpt fdisk for os x
+http://sourceforge.net/projects/gptfdisk/
+
+
+Installation media required:
+(optional) OS X mavericks (incase you mess up and start over)
+Windows 8.1 
+(possibly) Windows 8
+boot camp drivers
+Ubuntu 14.04
+
+NOTE: I do not explain how to obtain any of the installation media other than boot camp so you will need to figure these out on your own.
+NOTE: If you are new to using terminal take note that, all terminal commands have been placed in “ “ so as to not confuse anyone do not type the quotations into terminal.
+
+Step 0:
+This should go without saying, back up anything you don’t want to lose
+- NOTE: this is just precautionary in case something goes wrong
+
+Step 1:
+This step may be skippable, Remove mavericks repair partition. 
+- In OS X open terminal and use the command sudo gdisk /dev/disk0
+- type the command P to view the partition layout
+- type D you will then be prompted for the partition to delete, choose the one that is labeled Recovery HD (should be 3)
+- type W to save the current partition table
+
+Step 2:
+Partition the layout, for simplicity and ease of use I used disk utility. 
+- In disk utility click on the hard drive on the left hand side, then click partition on the right.
+- Now you should see one solid partition named Macintosh HD
+- Click the + symbol below the partition layout 3 times to add three more partitions.
+- Resize the first partition to the size you want your OS X partition to be
+- Resize the second for your Windows Partition
+- Resize the third partition for your Linux root file system
+- and what’s left should be for your linux swap partition 
+- All file types can be left as Mac OS extended journal (we will reformat these as we go along)
+- Now hit apply to make the changes final
+
+Step 3:
+Install refind
+- download the bin folder from the provided link
+- inside the bin folder drag the install script into a terminal window, this will now install refind
+- once installed feel free to reboot your macbook to see the glorious changes
+- IMPORTANT : In OS X finder transfer the drivers_x64 folder from the refind bin found in /refind to the installed location of refind defaulted to /EFI/refind, this allows refind to find the ext4 file system 
+
+Step 4:
+Create boot camp driver media
+- Open up the boot camp assistant and make sure that only the second option is checked to download the drivers and go ahead and install them to a thumb drive or dvd
+
+Now that the setup is done we now need to install our operating systems
+
+Step 5:
+Install Ubuntu 14.04 
+- Launch your live cd or usb and test ubuntu before installing
+- IMPORTANT - Once your live cd has launched open a terminal and type in “ubiquity -b” this will allow us to install Ubuntu without the grub boot loader
+- Run through the basic setup and when it asks where to install click the option Something Else
+- find your partition designated for your linux root earlier and double click set the type to ext 4, check the format box and select / for mount point then select ok
+- Now set your last partition by double clicking and set the type to swap space
+- click ok and then install
+
+Once its done installing go ahead and reboot you should now be able to boot both linux and os x on the refind boot menu, In linux you will most likely need some driver support at least wifi support. 
+
+Step 6:
+Install wireless drivers on linux
+- boot into your linux partition that you’ve just made
+- open up the linux live cd in the file explorer and navigate to /pool/restricted/b/bcmwl and drag the single file onto the desktop for the moment
+- now navigate to /pool/main/d/dkms grab the file and put it on the desktop
+- open terminal and type “sudo dpkg -i” and before you click enter drag the file that begins with dpkg into terminal, click enter, this will install the dependencies for your wifi drivers
+- then in terminal type “sudo dpkg -i” and before you click enter drag the file beginning with bcmwl into terminal, this will install the wifi drivers (this takes a little while to get done so be patient)
+- now in terminal type “sudo mod probe wl” this command will load the drivers
+- now you should be able to click on the wifi icon in the top right and start a wifi connections as normal
+
+Step 7:
+Create a hybrid mbr to install windows
+- boot into your linux live cd again click on try ubuntu
+- go ahead and type “sudo gdisk /dev/sda” 
+VERY IMPORTANT DO NOT DEVIATE FROM THIS
+- next type “p” to print the partition table so we can verify where the windows and ubuntu install locations are if you started fresh and clean and followed all steps they should be on 3 and 4 respectively
+- now type “h”
+- now enter your linux partition and windows  so for me this was 3 4 (might be different for you if you left recovery HD on your hard drive)
+- type “y” when it asks if you want to place the efi partition first in the mbr
+- press enter for default hex code 
+- then type “n” for not bootable
+- press enter for default hex code
+- then type “n” for not bootable
+- type “n” when it prompts if you want to use unused partition space to protect more partitions
+- type “w” to write the partition table then type “y” and it should say it has installed successfully
+
+Step 7:
+Install Windows 8.1
+note: On this part I had troubles formatting the disk with windows 8.1 and had to use a windows 8 disk to format.
+- click install now when prompted
+- type in product key
+- accept liscence then click next
+- click custom install
+- careful here, click on the spot where you designated space for windows delete it
+- click new on it, then click format
+(if you ran into an error try using a windows 8 disk as I had to because it didn’t want to format with 8.1)
+- click install and allow it to do its thing
+- the computer will reboot go ahead and boot from the actual hard drive partition as we are done with the windows install media
+- set up user and configurations as normal
+- once you boot into it and you are in windows insert your bootcamp medium and find setup and let it run
+(setup can be found in /BootCamp)
+- NOTE: if using a retina display as I did you will most likely need to adjust the display as everything will be tiny
+
+At this point you should have a fully functioning triple boot for your macbook.
