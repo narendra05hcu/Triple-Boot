@@ -86,6 +86,7 @@ Create a hybrid mbr to install windows
 - go ahead and type “sudo gdisk /dev/sda” 
 VERY IMPORTANT DO NOT DEVIATE FROM THIS
 - next type “p” to print the partition table so we can verify where the windows and ubuntu install locations are if you started fresh and clean and followed all steps they should be on 3 and 4 respectively
+- type "r"
 - now type “h”
 - now enter your linux partition and windows  so for me this was 3 4 (might be different for you if you left recovery HD on your hard drive)
 - type “y” when it asks if you want to place the efi partition first in the mbr
