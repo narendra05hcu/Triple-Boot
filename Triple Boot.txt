@@ -75,7 +75,7 @@ Install wireless drivers on linux
 - boot into your linux partition that you’ve just made
 - open up the linux live cd in the file explorer and navigate to /pool/restricted/b/bcmwl and drag the single file onto the desktop for the moment
 - now navigate to /pool/main/d/dkms grab the file and put it on the desktop
-- open terminal and type “sudo dpkg -i” and before you click enter drag the file that begins with dpkg into terminal, click enter, this will install the dependencies for your wifi drivers
+- open terminal and type “sudo dpkg -i” and before you click enter drag the file that begins with dkms into terminal, click enter, this will install the dependencies for your wifi drivers
 - then in terminal type “sudo dpkg -i” and before you click enter drag the file beginning with bcmwl into terminal, this will install the wifi drivers (this takes a little while to get done so be patient)
 - now in terminal type “sudo mod probe wl” this command will load the drivers
 - now you should be able to click on the wifi icon in the top right and start a wifi connections as normal
